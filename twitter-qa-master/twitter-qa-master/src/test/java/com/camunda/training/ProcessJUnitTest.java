@@ -4,11 +4,12 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.extension.junit5.test.ProcessEngineExtension;
-import static org.assertj.core.api.Assertions.*;
+import org.assertj.core.api.*;
 import org.camunda.bpm.extension.process_test_coverage.junit5.ProcessEngineCoverageExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.camunda.bpm.engine.test.assertions.ProcessEngineTests.*;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ProcessJUnitTest {
     // Start process with Java API and variables
     ProcessInstance processInstance = runtimeService().startProcessInstanceByKey("twitter-qa", variables);
 
-    assertThat(processInstance).isWaitingAt(findId("Review Tweet"));
+    assertThat(processInstance).isWaitingAt("Activity_0bq8ehk");
 
     List<Task> taskList = taskService()
             .createTaskQuery()
@@ -39,10 +40,10 @@ public class ProcessJUnitTest {
             .processInstanceId(processInstance.getId())
             .list();
 
-    assertThat(taskList).isNotNull();
-    assertThat(taskList).hasSize(1);
+    Assertions.assertThat(taskList).isNotNull();
+    Assertions.assertThat(taskList).hasSize(1);
 
-    Task task = taskList.get(0);
+    Task task = taskList.getFirst();
 
     Map<String, Object> approvedMap = new HashMap<String, Object>();
     approvedMap.put("approved", true);
